@@ -71,3 +71,15 @@ Acknowledgments
 
 The dataset is sourced from the Mall Customers Dataset.
 Special thanks to the creators of the libraries and tools used in this analysis.
+
+
+#OUTPUT
+![Screenshot 2024-07-24 163002](https://github.com/user-attachments/assets/801f042c-eadc-4b60-82d5-ad74e0edae29)
+
+![Screenshot 2024-07-24 163014](https://github.com/user-attachments/assets/e340df77-392f-4b7a-8298-bec9d4e94120)
+
+![Screenshot 2024-07-24 163058](https://github.com/user-attachments/assets/f95261a5-f03a-4d15-b3c3-ff0f68fd0821)
+
+![Screenshot 2024-07-24 163142](https://github.com/user-attachments/assets/4340dbf0-b78a-439a-abaf-3a6a97411e43)
+
+
