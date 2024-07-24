@@ -1,0 +1,77 @@
+/* CUSTOMER SEGMENTATION AND ANALYSIS*/
+
+import pandas as pd
+
+# Load the data
+data = pd.read_csv('C:\\Users\\mohit\\OneDrive\\Documents\\Desktop\\data analyst\\Mall_Customers.csv')
+
+from sklearn.preprocessing import LabelEncoder
+
+# Encode 'Genre' as a numeric feature
+label_encoder = LabelEncoder()
+data['Genre'] = label_encoder.fit_transform(data['Genre'])
+from sklearn.preprocessing import StandardScaler
+
+# Standardize features
+scaler = StandardScaler()
+scaled_features = scaler.fit_transform(data[['Age', 'Annual Income (k$)', 'Spending Score (1-100)', 'Genre']])
+scaled_df = pd.DataFrame(scaled_features, columns=['Age', 'Annual Income (k$)', 'Spending Score (1-100)', 'Genre'])
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
+# Elbow Method
+sse = []
+k_values = range(1, 11)
+for k in k_values:
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(scaled_df)
+    sse.append(kmeans.inertia_)
+
+plt.figure(figsize=(12, 6))
+plt.plot(k_values, sse, marker='o')
+plt.xlabel('Number of Clusters (k)')
+plt.ylabel('Sum of Squared Errors (SSE)')
+plt.title('Elbow Method for Determining Optimal k')
+plt.show()
+
+# Silhouette Score
+silhouette_scores = []
+for k in range(2, 11):
+    kmeans = KMeans(n_clusters=k, random_state=42)
+    kmeans.fit(scaled_df)
+    silhouette_scores.append(silhouette_score(scaled_df, kmeans.labels_))
+
+plt.figure(figsize=(12, 6))
+plt.plot(range(2, 11), silhouette_scores, marker='o')
+plt.xlabel('Number of Clusters (k)')
+plt.ylabel('Silhouette Score')
+plt.title('Silhouette Score for Determining Optimal k')
+plt.show()
+optimal_k = 5  # Example value, replace with your chosen k
+kmeans = KMeans(n_clusters=optimal_k, random_state=42)
+kmeans.fit(scaled_df)
+data['KMeans_Cluster'] = kmeans.labels_
+from sklearn.cluster import DBSCAN
+
+# Apply DBSCAN
+dbscan = DBSCAN(eps=0.5, min_samples=5)
+data['DBSCAN_Cluster'] = dbscan.fit_predict(scaled_df)
+print("KMeans Clusters Analysis:")
+print(data.groupby('KMeans_Cluster').mean())
+
+print("\nDBSCAN Clusters Analysis:")
+print(data.groupby('DBSCAN_Cluster').mean())
+import seaborn as sns
+
+# Plot KMeans Clusters
+plt.figure(figsize=(12, 6))
+sns.scatterplot(x=data['Annual Income (k$)'], y=data['Spending Score (1-100)'], hue=data['KMeans_Cluster'], palette='Set1')
+plt.title('KMeans Clusters')
+plt.show()
+
+# Plot DBSCAN Clusters
+plt.figure(figsize=(12, 6))
+sns.scatterplot(x=data['Annual Income (k$)'], y=data['Spending Score (1-100)'], hue=data['DBSCAN_Cluster'], palette='Set1')
+plt.title('DBSCAN Clusters')
+plt.show()
